@@ -20,20 +20,80 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
-
+void importDataFromFile(string filename, vector<string> &names, vector<int> &scores, vector<char> &grades){
+    ifstream source(filename.c_str());
+    string textline;
+    int count = 0;
+    while(getline(source,textline)){
+    	
+    	float a,b,c,sum;
+    	char format[] = "%[^:]: %f %f %f";
+    	char t_name[100];
+    	
+		sscanf(textline.c_str(), format, t_name, &a, &b, &c);
+		
+		sum = a+b+c;
+        char t_grade = score2grade(sum);
+        
+		names.push_back(t_name);
+		scores.push_back(sum);
+		grades.push_back(t_grade);
+		
+		count++;
+	}
+    
 }
 
-void getCommand(){
 
+void getCommand(string &command, string &key){
+    cout << "Please input your command: ";
+    cin >> command;
+    string x;
+    x = toUpperStr(command);
+    if((x == "GRADE") || (x == "NAME")) {
+        cin.ignore();
+    getline(cin,key);
+    }
 }
 
-void searchName(){
+void searchName(vector<string> names, vector<int> scores, vector<char> grades, string key){
+    int test = 0;
+    int x = names.size();
+    for(int i = 0; i < x; i++) {
+        if(toUpperStr(names[i]) == key) {
+            cout << "---------------------------------\n";
+            cout << names[i] << "'s score = " << scores[i] << "\n";
+            cout << names[i] << "'s grade = " << grades[i] << "\n";
+            cout << "---------------------------------\n";
+            test++;
+        }
+    }
 
+    if(test == 0) {
+        cout << "---------------------------------\n";
+        cout << "Cannot found.\n";
+        cout << "---------------------------------\n";
+    } 
 }
 
-void searchGrade(){
+void searchGrade(vector<string> names, vector<int> scores, vector<char> grades, string key){
+    int test = 0;
+    int x = grades.size();
+    cout << "---------------------------------\n";
+    
+    for(int i = 0; i < x; i++) {
+        grades[i] = toupper(grades[i]);
+        if(grades[i] == key[0]) {
+            cout << names[i] << " (" << scores[i] << ")\n";
+            test++;
+        }
+    }
 
+    if(test == 0) {
+        cout << "Cannot found.\n";
+    }
+
+    cout << "---------------------------------\n";
 }
 
 
